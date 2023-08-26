@@ -1,29 +1,4 @@
 import 'package:meta/meta.dart';
-import 'dart:convert';
-
-Service serviceFromJson(String str) => Service.fromJson(json.decode(str));
-
-String serviceToJson(Service data) => json.encode(data.toJson());
-
-class Service {
-  Service({
-    @required this.message,
-    @required this.data,
-  });
-
-  final String message;
-  final List<Datum> data;
-
-  factory Service.fromJson(Map<String, dynamic> json) => Service(
-        message: json["message"],
-        data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "message": message,
-        "data": List<dynamic>.from(data.map((x) => x.toJson())),
-      };
-}
 
 class Datum {
   Datum({

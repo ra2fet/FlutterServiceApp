@@ -15,19 +15,15 @@ class SubDetailView extends GetView<ServiceController> {
         centerTitle: true,
       ),
       body: Obx(() {
-        return controller.isDataProcessing.value
-            ? Center(
-                child: CircularProgressIndicator(),
+        return category.categories.length > 0
+            ? ListView.builder(
+                scrollDirection: Axis.vertical,
+                itemCount: category.categories.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return serviceSubDetailItem(index);
+                },
               )
-            : category.categories.length > 0
-                ? ListView.builder(
-                    scrollDirection: Axis.vertical,
-                    itemCount: category.categories.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return serviceSubDetailItem(index);
-                    },
-                  )
-                : Container();
+            : Text("No data found");
       }),
     );
   }
