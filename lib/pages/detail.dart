@@ -1,45 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:service_app/controllers/service_controller.dart';
+import 'package:service_app/models/service.dart';
 import 'package:service_app/pages/subdetail.dart';
 
 class DetailView extends GetView<ServiceController> {
-  final int id;
-  final String title;
+  final Datum service;
 
-  DetailView(this.title, this.id);
+  DetailView(this.service);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-        centerTitle: true,
-      ),
-      body: Obx(() {
-        if (controller.isDataProcessing.value == true) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        } else {
-          if (controller.listService[id]["categories"].length > 0) {
-            return ListView.builder(
-              scrollDirection: Axis.vertical,
-              itemCount: controller.listService[id]["categories"].length,
-              itemBuilder: (BuildContext context, int index) {
-                return serviceDetailItem(index);
-              },
-            );
-          }
-        }
-      }),
-    );
+        appBar: AppBar(
+          title: Text(service.name),
+          centerTitle: true,
+        ),
+        body: service.categories.length > 0
+            ? ListView.builder(
+                scrollDirection: Axis.vertical,
+                itemCount: service.categories.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return serviceDetailItem(index);
+                },
+              )
+            : Text("No data found"));
   }
 
   Widget serviceDetailItem(int index) {
     return InkWell(
-      onTap: () => Get.to(SubDetailView(
-          controller.listService[id]["categories"][index]['name'], id, index)),
+      onTap: () => Get.to(SubDetailView(service.categories[index])),
       child: Container(
         padding: EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
         child: Container(
@@ -54,11 +44,9 @@ class DetailView extends GetView<ServiceController> {
                 Container(
                   height: 150,
                   width: 200,
-                  child: controller.listService[id]["categories"][index]
-                          ['image']
+                  child: service.categories[index].image.isNotEmpty
                       ? Image.network(
-                          controller.listService[id]["categories"][index]
-                              ['image'],
+                          service.categories[index].image,
                           fit: BoxFit.cover,
                         )
                       : Container(
@@ -71,7 +59,7 @@ class DetailView extends GetView<ServiceController> {
                         ),
                 ),
                 Text(
-                  controller.listService[id]["categories"][index]['name'],
+                  service.categories[index].name,
                   style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.w600,

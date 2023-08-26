@@ -1,39 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:service_app/controllers/service_controller.dart';
+import 'package:service_app/models/service.dart';
 
 class SubDetailView extends GetView<ServiceController> {
-  final int id;
-  final int subid;
-  final String title;
-  SubDetailView(this.title, this.id, this.subid);
+  final Datum category;
+  SubDetailView(this.category);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(title),
+        title: Text(category.name),
         centerTitle: true,
       ),
       body: Obx(() {
-        if (controller.isDataProcessing.value == true) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        } else {
-          if (controller
-                  .listService[id]["categories"][subid]["categories"].length >
-              0) {
-            return ListView.builder(
-              scrollDirection: Axis.vertical,
-              itemCount: controller
-                  .listService[id]["categories"][subid]["categories"].length,
-              itemBuilder: (BuildContext context, int index) {
-                return serviceSubDetailItem(index);
-              },
-            );
-          }
-        }
+        return controller.isDataProcessing.value
+            ? Center(
+                child: CircularProgressIndicator(),
+              )
+            : category.categories.length > 0
+                ? ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    itemCount: category.categories.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return serviceSubDetailItem(index);
+                    },
+                  )
+                : Container();
       }),
     );
   }
@@ -53,11 +47,9 @@ class SubDetailView extends GetView<ServiceController> {
               Container(
                 height: 150,
                 width: 200,
-                child: controller.listService[id]["categories"][subid]
-                        ["categories"][index]['image']
+                child: category.categories[index].image.isNotEmpty
                     ? Image.network(
-                        controller.listService[id]["categories"][subid]
-                            ["categories"][index]['image'],
+                        category.categories[index].image,
                         fit: BoxFit.cover,
                       )
                     : Container(
@@ -70,8 +62,7 @@ class SubDetailView extends GetView<ServiceController> {
                       ),
               ),
               Text(
-                controller.listService[id]["categories"][subid]["categories"]
-                    [index]['name'],
+                category.categories[index].name,
                 style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.w500,

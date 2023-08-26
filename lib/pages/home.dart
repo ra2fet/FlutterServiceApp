@@ -21,29 +21,26 @@ class HomeView extends GetView<ServiceController> {
         centerTitle: true,
       ),
       body: Obx(() {
-        if (controller.isDataProcessing.value == true) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        } else {
-          if (controller.listService.length > 0) {
-            return ListView.builder(
-              scrollDirection: Axis.vertical,
-              itemCount: controller.listService.length,
-              itemBuilder: (BuildContext context, int index) {
-                return serviceItem(index);
-              },
-            );
-          }
-        }
+        return controller.isDataProcessing.value
+            ? Center(
+                child: CircularProgressIndicator(),
+              )
+            : controller.listService.length > 0
+                ? ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    itemCount: controller.listService.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return serviceItem(index);
+                    },
+                  )
+                : Text("No data found");
       }),
     );
   }
 
   Widget serviceItem(int index) {
     return InkWell(
-      onTap: () =>
-          Get.to(DetailView(controller.listService[index]['name'], index)),
+      onTap: () => Get.to(DetailView(controller.listService[index])),
       child: Container(
         padding: EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
         child: Container(
@@ -58,9 +55,9 @@ class HomeView extends GetView<ServiceController> {
                 Container(
                   height: 150,
                   width: 200,
-                  child: controller.listService[index]['image']
+                  child: controller.listService[index].image.isNotEmpty
                       ? Image.network(
-                          controller.listService[index]['image'],
+                          controller.listService[index].image,
                           fit: BoxFit.cover,
                         )
                       : Container(
@@ -73,7 +70,7 @@ class HomeView extends GetView<ServiceController> {
                         ),
                 ),
                 Text(
-                  controller.listService[index]['name'],
+                  controller.listService[index].name,
                   style: TextStyle(
                       color: Colors.green,
                       fontWeight: FontWeight.w700,

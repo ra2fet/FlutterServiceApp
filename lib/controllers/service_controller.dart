@@ -2,19 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:service_app/providers/service_provider.dart';
 
+import '../models/service.dart';
+
 class ServiceController extends GetxController {
-  var listService = List<dynamic>.empty(growable: true).obs;
+  var listService = List<Datum>.empty(growable: true).obs;
   var isDataProcessing = false.obs;
-
-
 
   @override
   void onInit() async {
     super.onInit();
     // Fetch Data
     getService();
-
-
   }
 
   // Fetch Data
@@ -41,8 +39,4 @@ class ServiceController extends GetxController {
         backgroundColor: backgroundColor,
         colorText: Colors.white);
   }
-
-  
-
- 
 }
